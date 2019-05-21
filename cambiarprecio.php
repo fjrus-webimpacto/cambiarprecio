@@ -155,7 +155,8 @@ class CambiarPrecio extends Module
         }
     }
     
-    public function registrosExcluidos($id_regis,$id_prod) {
+    public function registrosExcluidos($id_regis,$id_prod)
+    {
         $sql = 'SELECT `id_precionuevo`, `id_excluido`
         FROM `'._DB_PREFIX_.'excluido`
         WHERE `id_precionuevo` = '.(int)$id_regis.' AND  `id_excluido` = "'.$id_prod.'"';
@@ -343,9 +344,9 @@ class CambiarPrecio extends Module
         $sql ='SELECT `id_precionuevo`, `fecha_cambio`,`tipo`, `opcion`, `cantidad`, `restaurado`,`actual`
         FROM `'._DB_PREFIX_.'cambiarprecio`';
     
-            if($orden) {
-                $sql .= 'WHERE id_precionuevo >= ' . $id  .' ORDER BY `fecha_cambio` DESC';
-            }
+        if($orden) {
+            $sql .= 'WHERE id_precionuevo >= ' . $id  .' ORDER BY `fecha_cambio` DESC';
+        }
         return Db::getInstance()->executeS($sql);
     }
 
@@ -444,7 +445,7 @@ class CambiarPrecio extends Module
                         } elseif ($nuevoDato2->tipo == "cantidad" && $nuevoDato2->opcion == "aumentar") {
                             $prod->price = $prod->price - $nuevoDato2->cantidad;
                         }
-                    $prod->save();
+                        $prod->save();
                     }
                 }
             }
