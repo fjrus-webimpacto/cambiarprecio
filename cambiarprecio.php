@@ -92,13 +92,13 @@ class CambiarPrecio extends Module
                         foreach ($productos as $producto) {
                             $precioproducto = new Product($producto['id_product']);
                             if ($nuevoDato->tipo == "porcentaje" && $nuevoDato->opcion == "disminuir") {
-                                $precioproducto->price =  $precioproducto->price - ($precioproducto->price * $nuevoDato->cantidad/100);
+                                $precioproducto->price -= ($precioproducto->price * $nuevoDato->cantidad/100);
                             } elseif ($nuevoDato->tipo == "cantidad" && $nuevoDato->opcion == "disminuir") {
-                                $precioproducto->price =  $precioproducto->price - $nuevoDato->cantidad;
+                                $precioproducto->price -= $nuevoDato->cantidad;
                             } elseif ($nuevoDato->tipo == "porcentaje" && $nuevoDato->opcion == "aumentar") {
-                                $precioproducto->price =  $precioproducto->price + ($precioproducto->price * $nuevoDato->cantidad/100);
+                                $precioproducto->price += ($precioproducto->price * $nuevoDato->cantidad/100);
                             } elseif ($nuevoDato->tipo == "cantidad" && $nuevoDato->opcion == "aumentar") {
-                                $precioproducto->price = $precioproducto->price + $nuevoDato->cantidad;
+                                $precioproducto->price += $nuevoDato->cantidad;
                             }
                             if ($precioproducto->price >= $precioproducto->wholesale_price) {
                                 $precioproducto->save();
@@ -379,13 +379,13 @@ class CambiarPrecio extends Module
                     $precioproducto = new Product($producto['id_product']);
                     if (!$this->preciosExcluidos($nuevoDato2->id_cambioprecio, $precioproducto->id)) {
                         if ($nuevoDato2->tipo == "porcentaje" && $nuevoDato2->opcion == "disminuir") {
-                            $precioproducto->price =+ ($precioproducto->price * $nuevoDato2->cantidad/100);
+                            $precioproducto->price += ($precioproducto->price * $nuevoDato2->cantidad/100);
                         } elseif ($nuevoDato2->tipo == "cantidad" && $nuevoDato2->opcion == "disminuir") {
-                            $precioproducto->price =+ $nuevoDato2->cantidad;
+                            $precioproducto->price += $nuevoDato2->cantidad;
                         } elseif ($nuevoDato2->tipo == "porcentaje" && $nuevoDato2->opcion == "aumentar") {
-                            $precioproducto->price =- ($precioproducto->price * $nuevoDato2->cantidad/100);
+                            $precioproducto->price -= ($precioproducto->price * $nuevoDato2->cantidad/100);
                         } elseif ($nuevoDato2->tipo == "cantidad" && $nuevoDato2->opcion == "aumentar") {
-                            $precioproducto->price =- $nuevoDato2->cantidad;
+                            $precioproducto->price -= $nuevoDato2->cantidad;
                         }
                         $precioproducto->save();
                     }
