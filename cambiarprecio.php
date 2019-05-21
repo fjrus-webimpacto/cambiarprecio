@@ -89,12 +89,10 @@ class CambiarPrecio extends Module
                         $nuevoDato->actual = false;
                     } else {
                         $productos = $this->getPrecioproducto();
-                        //ddd($products);
                         $nuevoDato->restaurado = false;
                         $nuevoDato->actual = true;
                         foreach ($productos as $producto) {
                             $prod = new Product($producto['id_product']);
-                            //ddd($prod);
                             if ($nuevoDato->tipo == "porcentaje" && $nuevoDato->opcion == "disminuir") {
                                  $prod->price =  $prod->price - ($prod->price * $nuevoDato->cantidad/100);
                             } elseif ($nuevoDato->tipo == "cantidad" && $nuevoDato->opcion == "disminuir") {
@@ -104,23 +102,18 @@ class CambiarPrecio extends Module
                             } elseif ($nuevoDato->tipo == "cantidad" && $nuevoDato->opcion == "aumentar") {
                                 $prod->price = $prod->price + $nuevoDato->cantidad;
                             }
-
                             if ($prod->price >= $prod->wholesale_price) {
                                 $prod->save();
-                               // ddd($prod);
                             }
                             else {
                                 $exclu = new Excluido();
                                 $exclu->id_precionuevo = $nuevoDato->id_precionuevo; 
-                                //ddd($prod);
                                 $exclu->id_excluido = $prod->id;
                                 $exclu->save();
                             }                     
                         }
                     }
-                   // ddd($contador);
                     $contador++;
-                    
                     $nuevoDato->save();
                 }
                  
@@ -128,7 +121,6 @@ class CambiarPrecio extends Module
                 $this->html .= $this->renderList();
                 return $this->html;
             } else {
-                //ddd(33);
                 $this->html .= $this->renderForm();
                 $this->html .= $this->renderList();
                 return $this->html;
@@ -441,7 +433,6 @@ class CambiarPrecio extends Module
         
         if (Tools::getValue('id_precionuevo') >= 1) {
             $datos = $this->getRegistros(true, Tools::getValue('id_precionuevo'));
-         //   ddd($datos);
             foreach ($datos as $dato) {
                 $nuevoDato2 = new Cambiar($dato['id_precionuevo']);
                 foreach ($productos as $producto) {
