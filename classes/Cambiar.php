@@ -26,7 +26,7 @@
 
 class Cambiar extends ObjectModel
 {
-    public $id_precionuevo;
+    public $id_cambioprecio;
     public $fecha_cambio;
     public $precio;
     public $tipo;
@@ -39,7 +39,7 @@ class Cambiar extends ObjectModel
     public static $definition = array
     (
         'table' => 'cambiarprecio',
-        'primary' => 'id_precionuevo',
+        'primary' => 'id_cambioprecio',
         'fields' => array(
             'fecha_cambio' => array('type' => self::TYPE_DATE),
             'tipo' => array('type' => self::TYPE_STRING,  'size' => 255),

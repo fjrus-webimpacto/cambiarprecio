@@ -27,7 +27,7 @@
 class Excluido extends ObjectModel
 {
     public $id_tabla;
-    public $id_precionuevo;
+    public $id_cambioprecio;
     public $id_excluido;
 
     public static $definition = array
@@ -35,8 +35,8 @@ class Excluido extends ObjectModel
         'table' => 'excluido',
         'primary' => 'id_tabla',
         'fields' => array(
-            'id_precionuevo' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'copy_post' => false),
-            'id_excluido' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'copy_post' => false),
+            'id_cambioprecio' => array('type' => self::TYPE_INT, 'size' => 255),
+            'id_excluido' => array('type' => self::TYPE_INT, 'size' => 255),
         ),
     );
 }

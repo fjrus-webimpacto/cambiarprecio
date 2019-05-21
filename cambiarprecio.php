@@ -79,9 +79,9 @@ class CambiarPrecio extends Module
         if (Tools::isSubmit('savecambiarprecio')) {
             if ($this->processSave()) {
                 $contador=0;
-                $datos = $this->getRegistros();
+                $datos = $this->getDatos();
                 foreach ($datos as $dato) {
-                    $nuevoDato = new Cambiar($dato['id_precionuevo']);
+                    $nuevoDato = new Cambiar($dato['id_cambioprecio']);
                     if ($contador < count($datos)-1) {
                         $nuevoDato->restaurado = false;
                         $nuevoDato->actual = false;
@@ -90,22 +90,22 @@ class CambiarPrecio extends Module
                         $nuevoDato->restaurado = false;
                         $nuevoDato->actual = true;
                         foreach ($productos as $producto) {
-                            $prod = new Product($producto['id_product']);
+                            $precioproducto = new Product($producto['id_product']);
                             if ($nuevoDato->tipo == "porcentaje" && $nuevoDato->opcion == "disminuir") {
-                                 $prod->price =  $prod->price - ($prod->price * $nuevoDato->cantidad/100);
+                                $precioproducto->price =  $precioproducto->price - ($precioproducto->price * $nuevoDato->cantidad/100);
                             } elseif ($nuevoDato->tipo == "cantidad" && $nuevoDato->opcion == "disminuir") {
-                                $prod->price =  $prod->price - $nuevoDato->cantidad;
+                                $precioproducto->price =  $precioproducto->price - $nuevoDato->cantidad;
                             } elseif ($nuevoDato->tipo == "porcentaje" && $nuevoDato->opcion == "aumentar") {
-                                $prod->price =  $prod->price + ($prod->price * $nuevoDato->cantidad/100);
+                                $precioproducto->price =  $precioproducto->price + ($precioproducto->price * $nuevoDato->cantidad/100);
                             } elseif ($nuevoDato->tipo == "cantidad" && $nuevoDato->opcion == "aumentar") {
-                                $prod->price = $prod->price + $nuevoDato->cantidad;
+                                $precioproducto->price = $precioproducto->price + $nuevoDato->cantidad;
                             }
-                            if ($prod->price >= $prod->wholesale_price) {
-                                $prod->save();
+                            if ($precioproducto->price >= $precioproducto->wholesale_price) {
+                                $precioproducto->save();
                             } else {
                                 $exclu = new Excluido();
-                                $exclu->id_precionuevo = $nuevoDato->id_precionuevo;
-                                $exclu->id_excluido = $prod->id;
+                                $exclu->id_cambioprecio = $nuevoDato->id_cambioprecio;
+                                $exclu->id_excluido = $precioproducto->id;
                                 $exclu->save();
                             }
                         }
@@ -113,7 +113,6 @@ class CambiarPrecio extends Module
                     $contador++;
                     $nuevoDato->save();
                 }
-                 
                 $this->html .= $this->renderForm();
                 $this->html .= $this->renderList();
                 return $this->html;
@@ -123,16 +122,16 @@ class CambiarPrecio extends Module
                 return $this->html;
             }
         } elseif (Tools::isSubmit('updatecambiarprecio')) {
-            $datos = $this->getRegistros();
-            $idDato = Tools::getValue('id_precionuevo');
+            $datos = $this->getDatos();
+            $idDato = Tools::getValue('id_cambioprecio');
             $this->getPreciosnuevos();
             foreach ($datos as $dato) {
-                $nuevoDato = new Cambiar($dato['id_precionuevo']);
-                if ($nuevoDato->id_precionuevo < $idDato-1) {
+                $nuevoDato = new Cambiar($dato['id_cambioprecio']);
+                if ($nuevoDato->id_cambioprecio < $idDato-1) {
                     $nuevoDato->restaurado = false;
                     $nuevoDato->actual = false;
                     $nuevoDato->save();
-                } elseif ($nuevoDato->id_precionuevo == $idDato-1) {
+                } elseif ($nuevoDato->id_cambioprecio == $idDato-1) {
                     $nuevoDato->restaurado = false;
                     $nuevoDato->actual = true;
                     $nuevoDato->save();
@@ -142,7 +141,6 @@ class CambiarPrecio extends Module
                     $nuevoDato->save();
                 }
             }
-            
             $this->html .= $this->renderForm();
             $this->html .= $this->renderList();
             return $this->html;
@@ -153,12 +151,12 @@ class CambiarPrecio extends Module
         }
     }
     
-    public function registrosExcluidos($id_regis, $id_prod)
+    public function registrosExcluidos($id_registro, $id_producto)
     {
-        $sql = 'SELECT `id_precionuevo`, `id_excluido`
+        $sql = 'SELECT `id_cambioprecio`, `id_excluido`
         FROM `'._DB_PREFIX_.'excluido`
-        WHERE `id_precionuevo` = '.(int)$id_regis.' AND  `id_excluido` = "'.$id_prod.'"';
-
+        WHERE `id_cambioprecio` = '.(int)$id_registro.' AND  `id_excluido` = '.$id_producto.'';
+        
         if (empty(Db::getInstance()->ExecuteS($sql))) {
             return false;
         } else {
@@ -178,63 +176,64 @@ class CambiarPrecio extends Module
         ),
         'input' => array(
             
-            array(
-                'type' => 'select',
-                'label' => $this->l('Tipo'),
-                'name' => 'tipo',
-                'options' => array(
-                    'query' => array(
-                         array(
-                            'id_option' => 1,
-                            'name' => 'porcentaje',
+                array(
+                    'type' => 'select',
+                    'label' => $this->l('Tipo'),
+                    'name' => 'tipo',
+                    'options' => array(
+                        'query' => array(
+                            array(
+                                'id_option' => 1,
+                                'name' => 'porcentaje',
+                            ),
+                            array(
+                                'id_option' => 2,
+                                'name' => 'cantidad',
+                            ),
                         ),
-                        array(
-                            'id_option' => 2,
-                            'name' => 'cantidad',
+                    'id' => 'id_option',
+                    'name' => 'name',
+                    )
+                ),
+                array(
+                    'type' => 'select',
+                    'label' => $this->l('Opcion'),
+                    'name' => 'opcion',
+                    'options' => array(
+                        'query' => array(
+                            array(
+                                'id_option' => 1,
+                                'name' => 'aumentar',
+                            ),
+                            array(
+                                'id_option' => 2,
+                                'name' => 'disminuir',
+                            ),
                         ),
-                    ),
-                'id' => 'id_option',
-                'name' => 'name',
+                    'id' => 'id_option',
+                    'name' => 'name',
+                    )
+                ),
+                array(
+                    'type' => 'text',
+                    'label' => $this->l('Cantidad '),
+                    'name' => 'cantidad',
+                    'col' => '2'
                 )
             ),
-            array(
-                'type' => 'select',
-                'label' => $this->l('Opcion'),
-                'name' => 'opcion',
-                'options' => array(
-                    'query' => array(
-                        array(
-                            'id_option' => 1,
-                            'name' => 'aumentar',
-                        ),
-                        array(
-                            'id_option' => 2,
-                            'name' => 'disminuir',
-                        ),
-                    ),
-                'id' => 'id_option',
-                'name' => 'name',
-                )
+            'submit' => array(
+                'title' => $this->l('Save'),
             ),
-            array(
-                'type' => 'text',
-                'label' => $this->l('Cantidad '),
-                'name' => 'cantidad',
-                'col' => '2'
+            'buttons' => array(
+                array(
+                    'href' => AdminController::$currentIndex.'&configure='.$this->name.'&token='.
+                    Tools::getAdminTokenLite('AdminModules'),
+                    'title' => $this->l('Back to list'),
+                    'icon' => 'process-icon-back'
+                )
             )
-        ),
-        'submit' => array(
-            'title' => $this->l('Save'),
-        ),
-        'buttons' => array(
-            array(
-                'href' => AdminController::$currentIndex.'&configure='.$this->name.'&token='.
-                Tools::getAdminTokenLite('AdminModules'),
-                'title' => $this->l('Back to list'),
-                'icon' => 'process-icon-back'
-            )
-        )
         );
+
         $fields_value = array();
         $helper = new HelperForm();
         $helper->module = $this;
@@ -249,7 +248,6 @@ class CambiarPrecio extends Module
         $fields_value['tipo']="";
         $fields_value['cantidad']="";
         $helper->fields_value = $fields_value;
-        
         
         return $helper->generateForm(array(array('form' => $fields_form)));
     }
@@ -299,11 +297,10 @@ class CambiarPrecio extends Module
                 'remove_onclick' => true,
             );
             
-
             $helper = new HelperList();
             $helper->shopLinkType = '';
             $helper->simple_header = false;
-            $helper->identifier = 'id_precionuevo';
+            $helper->identifier = 'id_cambioprecio';
             $helper->show_toolbar = false;
             $helper->imageType = 'jpg';
             $helper->actions = array('edit');
@@ -317,32 +314,20 @@ class CambiarPrecio extends Module
     /**
      * Create the structure of your form.
      */
-/*
-    protected function getListContent($orden = false, $id=0)
-    {
-        $sql = 'SELECT `id_precionuevo`, `fecha_cambio`,`tipo`, `opcion`, `cantidad`, `restaurado`,`actual`
-        FROM `'._DB_PREFIX_.'cambiarprecio`';
-    
-            if ($orden) {
-                $sql .=  ' WHERE id_precionuevo >= ' . $id  .' ORDER BY `fecha_cambio` DESC';
-            }
-    
-        return Db::getInstance()->executeS($sql);
-    }
-    */
+
     protected function getListContent()
     {
-        $registros = $this->getRegistros();
+        $registros = $this->getDatos();
         return $registros;
     }
     
-    public function getRegistros($orden = false, $id = 0)
+    public function getDatos($ordenar = false, $id = 0)
     {
-        $sql ='SELECT `id_precionuevo`, `fecha_cambio`,`tipo`, `opcion`, `cantidad`, `restaurado`,`actual`
+        $sql ='SELECT `id_cambioprecio`, `fecha_cambio`,`tipo`, `opcion`, `cantidad`, `restaurado`,`actual`
         FROM `'._DB_PREFIX_.'cambiarprecio`';
     
-        if ($orden) {
-            $sql .= 'WHERE id_precionuevo >= ' . $id  .' ORDER BY `fecha_cambio` DESC';
+        if ($ordenar) {
+            $sql .= 'WHERE id_cambioprecio >= ' . $id  .' ORDER BY `fecha_cambio` DESC';
         }
         return Db::getInstance()->executeS($sql);
     }
@@ -355,25 +340,6 @@ class CambiarPrecio extends Module
         return Db::getInstance()->ExecuteS($sql);
     }
 
-    public function getFormValues()
-    {
-        $fields_value = array();
-        $id_precionuevo = (int)Tools::getValue('id_precionuevo');
-        if ($id_precionuevo) {
-            $dato = new Cambiar((int)$id_precionuevo);
-            $fields_value['id_precionuevo'] = $dato->id_precionuevo;
-            $fields_value['tipo'] = $dato->tipo;
-            $fields_value['opcion'] = $dato->opcion;
-        } else {
-            $fields_value['id_precionuevo'] = "";
-            $fields_value['tipo'] = "";
-            $fields_value['opcion'] = "";
-        }
-        $fields_value['id_precionuevo'] = $id_precionuevo;
-        
-        return $fields_value;
-    }
-
     public function processSave()
     {
         $this->getPreciosnuevos();
@@ -382,16 +348,8 @@ class CambiarPrecio extends Module
         if (isset($_REQUEST['savecambiarprecio'])) {
             $dato = new Cambiar();
             $dato->fecha_cambio = $fecha;
-            if (Tools::getValue('tipo') == 1) {
-                $dato->tipo = "porcentaje";
-            } else {
-                $dato->tipo = "cantidad";
-            }
-            if (Tools::getValue('opcion') == 1) {
-                $dato->opcion = "aumentar";
-            } else {
-                $dato->opcion = "disminuir";
-            }
+            $dato->tipo = Tools::getValue('tipo') == 1 ? "porcentaje" : "cantidad";
+            $dato->opcion = Tools::getValue('opcion') == 1 ? "aumentar" : "disminuir";
             $dato->cantidad = Tools::getValue('cantidad');
             $dato->restaurado = false;
             $dato->actual = true;
@@ -399,47 +357,37 @@ class CambiarPrecio extends Module
         } else {
             $dato = new Cambiar();
             $dato->fecha_cambio = $fecha;
-            if (Tools::getValue('tipo') == 1) {
-                $dato->tipo = "porcentaje";
-            } else {
-                $dato->tipo = "cantidad";
-            }
-            if (Tools::getValue('opcion') == 1) {
-                $dato->opcion = "aumentar";
-            } else {
-                $dato->opcion = "disminuir";
-            }
+            $dato->tipo = Tools::getValue('tipo') == 1 ? "porcentaje" : "cantidad";
+            $dato->opcion = Tools::getValue('opcion') == 1 ? "aumentar" : "disminuir";
             $dato->cantidad = Tools::getValue('cantidad');
             $dato->restaurado = false;
             $dato->actual = true;
             $saved = $dato->save();
         }
-    
         return $saved;
     }
 
     public function getPreciosnuevos()
     {
- 
         $productos = $this->getPrecioproducto();
         
-        if (Tools::getValue('id_precionuevo') >= 1) {
-            $datos = $this->getRegistros(true, Tools::getValue('id_precionuevo'));
+        if (Tools::getValue('id_cambioprecio') >= 1) {
+            $datos = $this->getDatos(true, Tools::getValue('id_cambioprecio'));
             foreach ($datos as $dato) {
-                $nuevoDato2 = new Cambiar($dato['id_precionuevo']);
+                $nuevoDato2 = new Cambiar($dato['id_cambioprecio']);
                 foreach ($productos as $producto) {
-                    $prod = new Product($producto['id_product']);
-                    if (!$this->registrosExcluidos($nuevoDato2->id_precionuevo, $prod->id)) {
+                    $precioproducto = new Product($producto['id_product']);
+                    if (!$this->registrosExcluidos($nuevoDato2->id_cambioprecio, $precioproducto->id)) {
                         if ($nuevoDato2->tipo == "porcentaje" && $nuevoDato2->opcion == "disminuir") {
-                            $prod->price =  $prod->price + ($prod->price * $nuevoDato2->cantidad/100);
+                            $precioproducto->price =  $precioproducto->price + ($precioproducto->price * $nuevoDato2->cantidad/100);
                         } elseif ($nuevoDato2->tipo == "cantidad" && $nuevoDato2->opcion == "disminuir") {
-                            $prod->price =  $prod->price + $nuevoDato2->cantidad;
+                            $precioproducto->price =  $precioproducto->price + $nuevoDato2->cantidad;
                         } elseif ($nuevoDato2->tipo == "porcentaje" && $nuevoDato2->opcion == "aumentar") {
-                            $prod->price =  $prod->price - ($prod->price * $nuevoDato2->cantidad/100);
+                            $precioproducto->price =  $precioproducto->price - ($precioproducto->price * $nuevoDato2->cantidad/100);
                         } elseif ($nuevoDato2->tipo == "cantidad" && $nuevoDato2->opcion == "aumentar") {
-                            $prod->price = $prod->price - $nuevoDato2->cantidad;
+                            $precioproducto->price = $precioproducto->price - $nuevoDato2->cantidad;
                         }
-                        $prod->save();
+                        $precioproducto->save();
                     }
                 }
             }
