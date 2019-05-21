@@ -74,7 +74,7 @@ class CambiarPrecio extends Module
     }
 
     public function getContent()
-    {      
+    {
         $this->html = "";
         if (Tools::isSubmit('savecambiarprecio')) {
             if ($this->processSave()) {
@@ -104,10 +104,10 @@ class CambiarPrecio extends Module
                                 $prod->save();
                             } else {
                                 $exclu = new Excluido();
-                                $exclu->id_precionuevo = $nuevoDato->id_precionuevo; 
+                                $exclu->id_precionuevo = $nuevoDato->id_precionuevo;
                                 $exclu->id_excluido = $prod->id;
                                 $exclu->save();
-                            }                     
+                            }
                         }
                     }
                     $contador++;
@@ -312,7 +312,7 @@ class CambiarPrecio extends Module
             $helper->token = Tools::getAdminTokenLite('AdminModules');
             $helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
             $content = $this->getListContent($this->context->language->id);
-            return $helper->generateList($content, $this->fields_list);   
+            return $helper->generateList($content, $this->fields_list);
     }
     /**
      * Create the structure of your form.
@@ -331,7 +331,7 @@ class CambiarPrecio extends Module
     }
     */
     protected function getListContent()
-    { 
+    {
         $registros = $this->getRegistros();
         return $registros;
     }
