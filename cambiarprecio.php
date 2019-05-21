@@ -159,7 +159,7 @@ class CambiarPrecio extends Module
         FROM `'._DB_PREFIX_.'excluido`
         WHERE `id_precionuevo` = '.(int)$id_regis.' AND  `id_excluido` = "'.$id_prod.'"';
 
-        if(empty(Db::getInstance()->ExecuteS($sql))) {
+        if (empty(Db::getInstance()->ExecuteS($sql))) {
             return false;
         } else {
             return true;
