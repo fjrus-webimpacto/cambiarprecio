@@ -1,1 +1,1 @@
-cambiarprecio
+# aumenta o disminuye 
