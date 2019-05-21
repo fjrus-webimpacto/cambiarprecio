@@ -50,7 +50,7 @@ class CambiarPrecio extends Module
 
 		parent::__construct();
 
-		$this->displayName = $this->l('cambiarprecio');
+		$this->displayName = $this->l('aumenta o disminuye');
 		$this->description = $this->l('aumentar o disminuir el precio de los productos');
 		$this->confirmUninstall = $this->l('Are you sure you want to uninstall?');
 		$this->ps_versions_compliancy = array('min' => '1.6', 'max' => _PS_VERSION_);
@@ -111,9 +111,9 @@ class CambiarPrecio extends Module
 							}
 							else{
 								$exclu = new Excluido();
-								$exclu->id_precionuevo = $nuevoDato->$id_precionuevo; 
+								$exclu->id_precionuevo = $nuevoDato->id_precionuevo; 
 								//ddd($prod);
-								$exclu->id_producto = $prod->id;
+								$exclu->id_excluido = $prod->id;
 								$exclu->save();
 							}                     
 						}

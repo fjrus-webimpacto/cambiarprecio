@@ -50,4 +50,3 @@ class Cambiar extends ObjectModel
         ),
     );
 }
-
