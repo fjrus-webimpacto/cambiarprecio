@@ -104,8 +104,7 @@ class CambiarPrecio extends Module
                             }
                             if ($prod->price >= $prod->wholesale_price) {
                                 $prod->save();
-                            }
-                            else {
+                            } else {
                                 $exclu = new Excluido();
                                 $exclu->id_precionuevo = $nuevoDato->id_precionuevo; 
                                 $exclu->id_excluido = $prod->id;
@@ -163,8 +162,7 @@ class CambiarPrecio extends Module
 
         if(empty(Db::getInstance()->ExecuteS($sql))) {
             return false;
-        }
-        else {
+        } else {
             return true;
         }
     }
@@ -342,13 +340,12 @@ class CambiarPrecio extends Module
     
     public function getRegistros($orden = false, $id = 0)
     {
-        $sql = 'SELECT `id_precionuevo`, `fecha_cambio`,`tipo`, `opcion`, `cantidad`, `restaurado`,`actual`
+        $sql ='SELECT `id_precionuevo`, `fecha_cambio`,`tipo`, `opcion`, `cantidad`, `restaurado`,`actual`
         FROM `'._DB_PREFIX_.'cambiarprecio`';
     
             if($orden) {
-                $sql .=  ' WHERE id_precionuevo >= ' . $id  .' ORDER BY `fecha_cambio` DESC';
+                $sql .= 'WHERE id_precionuevo >= ' . $id  .' ORDER BY `fecha_cambio` DESC';
             }
-
         return Db::getInstance()->executeS($sql);
     }
 
