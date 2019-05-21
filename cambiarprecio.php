@@ -109,7 +109,7 @@ class CambiarPrecio extends Module
                                 $prod->save();
                                // ddd($prod);
                             }
-                            else{
+                            else {
                                 $exclu = new Excluido();
                                 $exclu->id_precionuevo = $nuevoDato->id_precionuevo; 
                                 //ddd($prod);
@@ -164,8 +164,7 @@ class CambiarPrecio extends Module
         }
     }
     
-    public function registrosExcluidos($id_regis,$id_prod)
-    {
+    public function registrosExcluidos($id_regis,$id_prod) {
         $sql = 'SELECT `id_precionuevo`, `id_excluido`
         FROM `'._DB_PREFIX_.'excluido`
         WHERE `id_precionuevo` = '.(int)$id_regis.' AND  `id_excluido` = "'.$id_prod.'"';
@@ -324,8 +323,7 @@ class CambiarPrecio extends Module
             $helper->token = Tools::getAdminTokenLite('AdminModules');
             $helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
             $content = $this->getListContent($this->context->language->id);
-            return $helper->generateList($content, $this->fields_list);
-           
+            return $helper->generateList($content, $this->fields_list);   
     }
 
     /**
@@ -352,14 +350,13 @@ class CambiarPrecio extends Module
     
     public function getRegistros($orden = false, $id = 0)
     {
-     
         $sql = 'SELECT `id_precionuevo`, `fecha_cambio`,`tipo`, `opcion`, `cantidad`, `restaurado`,`actual`
         FROM `'._DB_PREFIX_.'cambiarprecio`';
     
-            if ($orden) {
+            if($orden) {
                 $sql .=  ' WHERE id_precionuevo >= ' . $id  .' ORDER BY `fecha_cambio` DESC';
             }
-    
+
         return Db::getInstance()->executeS($sql);
     }
 
