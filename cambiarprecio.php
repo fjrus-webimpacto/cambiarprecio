@@ -76,14 +76,12 @@ class CambiarPrecio extends Module
     public function getContent()
     {      
         $this->html = "";
-        
         if (Tools::isSubmit('savecambiarprecio')) {
             if ($this->processSave()) {
                 $contador=0;
                 $datos = $this->getRegistros();
                 foreach ($datos as $dato) {
                     $nuevoDato = new Cambiar($dato['id_precionuevo']);
-                    
                     if ($contador < count($datos)-1) {
                         $nuevoDato->restaurado = false;
                         $nuevoDato->actual = false;
@@ -316,7 +314,6 @@ class CambiarPrecio extends Module
             $content = $this->getListContent($this->context->language->id);
             return $helper->generateList($content, $this->fields_list);   
     }
-
     /**
      * Create the structure of your form.
      */
@@ -350,7 +347,6 @@ class CambiarPrecio extends Module
         return Db::getInstance()->executeS($sql);
     }
 
-
     public function getPrecioproducto()
     {
         $sql = 'SELECT `id_product`, `price`,`wholesale_price`
@@ -377,7 +373,6 @@ class CambiarPrecio extends Module
         
         return $fields_value;
     }
-
 
     public function processSave()
     {
@@ -422,7 +417,6 @@ class CambiarPrecio extends Module
     
         return $saved;
     }
-    
 
     public function getPreciosnuevos()
     {
