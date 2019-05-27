@@ -28,22 +28,20 @@ $sql = array();
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'cambiarprecio` (
     `id_cambioprecio` int(11) NOT NULL AUTO_INCREMENT,
-    `fecha_cambio` varchar(30) NOT NULL,
+    `fecha_cambio` varchar(50) NOT NULL,
     `tipo` varchar(15) NOT NULL,
     `opcion`varchar(15) NOT NULL,
-    `cantidad` int(11) NOT NULL,
-    `restaurado` boolean NOT NULL,
+    `cantidad` float(11) NOT NULL,
     `actual` boolean NOT NULL,
       PRIMARY KEY  (`id_cambioprecio`)
 ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
 
-$sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'excluido` (
-    `id_tabla` int(11) NOT NULL AUTO_INCREMENT,
-    `id_cambioprecio` int(11) NOT NULL,
-    `id_excluido` int(11) NOT NULL,
-    PRIMARY KEY  (`id_tabla`)
+$sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'originalprecio` (
+    `id_registro`int(11) NOT NULL AUTO_INCREMENT,
+    `id_product` int(11) NOT NULL,
+    `originalprice` float(11) NOT NULL,
+    PRIMARY KEY  (`id_registro`)
     ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
-
 
 foreach ($sql as $query) {
     if (Db::getInstance()->execute($query) == false) {

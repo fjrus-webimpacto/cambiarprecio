@@ -32,20 +32,17 @@ class Cambiar extends ObjectModel
     public $tipo;
     public $opcion;
     public $cantidad;
-    public $restaurado;
     public $actual;
-    
-
+ 
     public static $definition = array
     (
         'table' => 'cambiarprecio',
         'primary' => 'id_cambioprecio',
         'fields' => array(
-            'fecha_cambio' => array('type' => self::TYPE_DATE),
+            'fecha_cambio' => array('type' => self::TYPE_STRING),
             'tipo' => array('type' => self::TYPE_STRING,  'size' => 255),
             'opcion' => array('type' => self::TYPE_STRING,  'size' => 255),
             'cantidad' => array('type' => self::TYPE_FLOAT,  'copy_post' => false),
-            'restaurado' => array('type' => self::TYPE_BOOL),
             'actual' => array('type' => self::TYPE_BOOL),
         ),
     );

@@ -24,19 +24,19 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class Excluido extends ObjectModel
+class Original extends ObjectModel
 {
-    public $id_tabla;
-    public $id_cambioprecio;
-    public $id_excluido;
-
+    public $id_registro;
+    public $id_product;
+    public $originalprice;
+   
     public static $definition = array
     (
-        'table' => 'excluido',
-        'primary' => 'id_tabla',
+        'table' => 'originalprecio',
+        'primary' => 'id_registro',
         'fields' => array(
-            'id_cambioprecio' => array('type' => self::TYPE_INT, 'size' => 255),
-            'id_excluido' => array('type' => self::TYPE_INT, 'size' => 255),
+            'id_product' => array('type' => self::TYPE_INT,  'size' => 255),
+            'originalprice' => array('type' => self::TYPE_FLOAT,  'size' => 255),
         ),
     );
 }
