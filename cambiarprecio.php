@@ -360,11 +360,11 @@ class CambiarPrecio extends Module
         foreach ($preciosOrigen as $precioOrigen) {
             $precio = new Product($precioOrigen['id_product']);
             if ($nuevoDato->tipo == "porcentaje" && $nuevoDato->opcion == "disminuir") {
-                $precio->price = $precioOrigen['originalprice']-($precioOrigen['originalprice']*$nuevoDato->cantidad/100);
+                $precio->price=$precioOrigen['originalprice']-($precioOrigen['originalprice']*$nuevoDato->cantidad/100);
             } elseif ($nuevoDato->tipo == "cantidad" && $nuevoDato->opcion == "disminuir") {
                 $precio->price = $precioOrigen['originalprice'] - $nuevoDato->cantidad;
             } elseif ($nuevoDato->tipo == "porcentaje" && $nuevoDato->opcion == "aumentar") {
-                $precio->price = $precioOrigen['originalprice'] + ($precioOrigen['originalprice'] * $nuevoDato->cantidad/100);
+                $precio->price=$precioOrigen['originalprice']+($precioOrigen['originalprice']*$nuevoDato->cantidad/100);
             } elseif ($nuevoDato->tipo == "cantidad" && $nuevoDato->opcion == "aumentar") {
                 $precio->price = $precioOrigen['originalprice'] + $nuevoDato->cantidad;
             }
