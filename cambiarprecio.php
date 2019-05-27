@@ -89,8 +89,8 @@ class CambiarPrecio extends Module
                     } else {
                         $nuevoDato->actual = true;
                         foreach ($preciosOrigen as $precioOrigen) {
-                            $precio = new Product($precioOrigen['id_product']);
-                             if ($nuevoDato->tipo == "porcentaje" && $nuevoDato->opcion == "disminuir") {
+                           $precio = new Product($precioOrigen['id_product']);
+                            if ($nuevoDato->tipo == "porcentaje" && $nuevoDato->opcion == "disminuir") {
                                 $precio->price = $precioOrigen['originalprice'] - ($precioOrigen['originalprice'] * $nuevoDato->cantidad/100);
                             } elseif ($nuevoDato->tipo == "cantidad" && $nuevoDato->opcion == "disminuir") {
                                 $precio->price = $precioOrigen['originalprice'] - $nuevoDato->cantidad;
@@ -101,7 +101,7 @@ class CambiarPrecio extends Module
                             }
                             if ($precio->price >= $precio->wholesale_price) {
                                     $precio->save();
-                            }            
+                            }
                         }
                     }
                     $contador++;
@@ -135,9 +135,7 @@ class CambiarPrecio extends Module
             $this->html .= $this->renderForm();
             $this->html .= $this->renderList();
             return $this->html;
-
-        } else
-        {
+        } else {
             $this->html .= $this->render();
             $this->html .= $this->renderForm();
             $this->html .= $this->renderList();
@@ -325,7 +323,7 @@ class CambiarPrecio extends Module
     public function getPrecioOriginal()
     {
         $datos = $this->getPrecioproducto();
-        foreach($datos as $dato) {
+        foreach ($datos as $dato) {
             $precio = new Product($dato['id_product']);
             $precioOrigen = new Original();
             $precioOrigen->id_product = $dato['id_product'];
@@ -362,7 +360,7 @@ class CambiarPrecio extends Module
         foreach ($preciosOrigen as $precioOrigen) {
             $precio = new Product($precioOrigen['id_product']);
             if ($nuevoDato->tipo == "porcentaje" && $nuevoDato->opcion == "disminuir") {
-                $precio->price = $precioOrigen['originalprice'] - ($precioOrigen['originalprice'] * $nuevoDato->cantidad/100);
+                $precio->price = $precioOrigen['originalprice']-($precioOrigen['originalprice']*$nuevoDato->cantidad/100);
             } elseif ($nuevoDato->tipo == "cantidad" && $nuevoDato->opcion == "disminuir") {
                 $precio->price = $precioOrigen['originalprice'] - $nuevoDato->cantidad;
             } elseif ($nuevoDato->tipo == "porcentaje" && $nuevoDato->opcion == "aumentar") {
