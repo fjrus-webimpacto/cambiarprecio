@@ -89,7 +89,7 @@ class CambiarPrecio extends Module
                     } else {
                         $nuevoDato->actual = true;
                         foreach ($preciosOrigen as $precioOrigen) {
-                           $precio = new Product($precioOrigen['id_product']);
+                            $precio = new Product($precioOrigen['id_product']);
                             if ($nuevoDato->tipo == "porcentaje" && $nuevoDato->opcion == "disminuir") {
                                 $precio->price = $precioOrigen['originalprice'] - ($precioOrigen['originalprice'] * $nuevoDato->cantidad/100);
                             } elseif ($nuevoDato->tipo == "cantidad" && $nuevoDato->opcion == "disminuir") {
@@ -369,7 +369,7 @@ class CambiarPrecio extends Module
                 $precio->price = $precioOrigen['originalprice'] + $nuevoDato->cantidad;
             }
             if ($precio->price >= $precio->wholesale_price) {
-                $precio->save();  
+                $precio->save();
             }
         }
     }
